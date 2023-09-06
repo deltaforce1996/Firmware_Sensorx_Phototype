@@ -21,8 +21,8 @@ enum Section
   BUTTON
 };
 
-XSeat xSeatLeft(PIN_SEAT_LEFT, 90);
-XSeat xSeatRight(PIN_SEAT_RIGHT, 90);
+XSeat xSeatLeft(PIN_SEAT_LEFT, 95);
+XSeat xSeatRight(PIN_SEAT_RIGHT, 95);
 XBelt xBeltLeft(PIN_BELT_LEFT);
 XBelt xBeltRight(PIN_BELT_RIGHT);
 XButton xButtonStart(BUTTON_START);
