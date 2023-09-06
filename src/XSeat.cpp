@@ -46,7 +46,7 @@ void XSeat::checkSeat()
 long XSeat::getDistance()
 {
   long duration = pulseIn(_pin, HIGH);
-  long distance = (duration / 2) / 29.1;
+  long distance = duration / 100;
   return distance;
 }
 
