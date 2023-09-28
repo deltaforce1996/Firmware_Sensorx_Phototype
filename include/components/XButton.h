@@ -8,18 +8,19 @@ class XButton
 public:
   XButton(int pin, unsigned long holdTime = 50);
   void begin();
-  void update();
-  void onPress(void (*function)());
-  void onRelease(void (*function)());
+  virtual void update();
+  virtual void onPress(void (*function)());
+  virtual void onRelease(void (*function)());
 
 protected:
   int _pin;
-  bool _lastState;
-  bool _isPress;
-
-  unsigned long _pressTime;
   unsigned long _holdTime;
+  unsigned long _pressTime;
+  unsigned long _lastDebounceTime;
+  bool _isPress;
+  int _lastState;
 
+private:
   void (*_onPressFunction)();
   void (*_onReleaseFunction)();
 };

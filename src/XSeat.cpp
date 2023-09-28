@@ -18,6 +18,7 @@ void XSeat::begin()
 void XSeat::checkSeat()
 {
   long distance = getDistance();
+  if (distance == -1) return;
   unsigned long now = millis();
   if (!_isSeated && distance < _distanceThreshold)
   {
@@ -45,9 +46,16 @@ void XSeat::checkSeat()
 
 long XSeat::getDistance()
 {
-  long duration = pulseIn(_pin, HIGH);
-  long distance = duration / 100;
-  return distance;
+  long duration = pulseIn(_pin, HIGH, 100000);
+   if (duration != 0)
+  {
+    long distance = duration / 100;
+    return distance;
+  }
+  else
+  {
+    return -1;
+  }
 }
 
 void XSeat::onSeat(void (*function)())
