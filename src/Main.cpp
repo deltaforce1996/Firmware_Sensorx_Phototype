@@ -5,13 +5,13 @@
 #include "components/XBelt.h"
 #include "components/XButton.h"
 
-const int PIN_SEAT_LEFT = 2;
-const int PIN_SEAT_RIGHT = 3;
-const int PIN_BELT_LEFT = 7;
-const int PIN_BELT_RIGHT = 5;
-const int BUTTON_START = 8;
-const int BUTTON_SLOW = 9;
-const int BUTTON_PLAYER = 10;
+#define PIN_SEAT_LEFT     2
+#define PIN_SEAT_RIGHT    3
+#define PIN_BELT_LEFT     7
+#define PIN_BELT_RIGHT    5
+#define BUTTON_START      8
+#define BUTTON_SLOW       9
+#define BUTTON_PLAYER     10
 
 enum Section
 {
@@ -34,7 +34,6 @@ uint8_t xSeatLeftState = 0;
 uint8_t xSeatRightState = 0;
 uint8_t xBeltRightState = 0;
 uint8_t xBeltLeftState = 0;
-int32_t counter = 0;
 
 void sendTo(Section section, uint8_t leftData, uint8_t rightData)
 {
@@ -44,46 +43,116 @@ void sendTo(Section section, uint8_t leftData, uint8_t rightData)
   dataArray[2] = rightData;
   dataArray[3] = '#';
 
-  // while (Serial.availableForWrite() < static_cast<int>(sizeof(dataArray)))
+  Serial.write(dataArray, sizeof(dataArray));
+  // for (int i = 0; i < 4; i++)
   // {
-  //   delay(1); // หน่วงเวลาเล็กน้อยถ้า buffer ไม่มีพื้นที่ว่าง
+  //   Serial.print(dataArray[i]);
   // }
-  // Serial.write(dataArray, sizeof(dataArray)); // ส่งข้อมูลผ่าน Serial
-
-  for (int i = 0; i < 4; i++)
-  {
-    Serial.print(dataArray[i]);
-  }
-  Serial.println();
-
-  // Serial.println("Counter = " + String(counter));
-  // counter++;
+  // Serial.println();
 }
 
+void L_Seat_Set()
+{
+  xSeatLeftState = 1;
+  sendTo(SEAT, xSeatLeftState, xSeatRightState);
+}
+
+void L_Seat_Levae()
+{
+  xSeatLeftState = 0;
+  sendTo(SEAT, xSeatLeftState, xSeatRightState);
+}
+
+void R_Seat_Set()
+{
+  xSeatRightState = 1;
+  sendTo(SEAT, xSeatLeftState, xSeatRightState);
+}
+
+void R_Seat_Levae()
+{
+  xSeatRightState = 0;
+  sendTo(SEAT, xSeatLeftState, xSeatRightState);
+}
+
+void L_Fasten()
+{
+  xBeltLeftState = 1;
+  sendTo(BELT, xBeltLeftState, xBeltRightState);
+}
+
+void L_Release()
+{
+  xBeltLeftState = 0;
+  sendTo(BELT, xBeltLeftState, xBeltRightState);
+}
+
+void R_Fasten()
+{
+  xBeltRightState = 1;
+  sendTo(BELT, xBeltLeftState, xBeltRightState);
+}
+
+void R_Release()
+{
+  xBeltRightState = 0;
+  sendTo(BELT, xBeltLeftState, xBeltRightState);
+}
+
+void Start_Clicked()
+{
+  sendTo(BUTTON, 0, 2);
+}
+
+void Slow_Clicked()
+{
+  sendTo(BUTTON, 0, 1);
+}
+
+void Player_Clicked()
+{
+  sendTo(BUTTON, 1, 0);
+}
 void setupCallbacks()
 {
-  xSeatLeft.onSeat([]()
-                   { xSeatLeftState = 1; sendTo(SEAT, xSeatLeftState, xSeatRightState); });
-  xSeatLeft.onUnSeat([]()
-                     { xSeatLeftState = 0; sendTo(SEAT, xSeatLeftState, xSeatRightState); });
-  xSeatRight.onSeat([]()
-                    { xSeatRightState = 1; sendTo(SEAT, xSeatLeftState, xSeatRightState); });
-  xSeatRight.onUnSeat([]()
-                      { xSeatRightState = 0; sendTo(SEAT, xSeatLeftState, xSeatRightState); });
-  xBeltLeft.onPress([]()
-                    { xBeltLeftState = 1; sendTo(BELT, xBeltLeftState, xBeltRightState); });
-  xBeltLeft.onRelease([]()
-                      { xBeltLeftState = 0; sendTo(BELT, xBeltLeftState, xBeltRightState); });
-  xBeltRight.onPress([]()
-                     { xBeltRightState = 1; sendTo(BELT, xBeltLeftState, xBeltRightState); });
-  xBeltRight.onRelease([]()
-                       { xBeltRightState = 0; sendTo(BELT, xBeltLeftState, xBeltRightState); });
-  xButtonStart.onPress([]()
-                       { sendTo(BUTTON, 0, 2); });
-  xButtonSlow.onPress([]()
-                      { sendTo(BUTTON, 0, 1); });
-  xButtonPlayer.onPress([]()
-                        { sendTo(BUTTON, 1, 0); });
+  // xSeatLeft.onSeat([]()
+  //                  { xSeatLeftState = 1; sendTo(SEAT, xSeatLeftState, xSeatRightState); });
+  // xSeatLeft.onUnSeat([]()
+  //                    { xSeatLeftState = 0; sendTo(SEAT, xSeatLeftState, xSeatRightState); });
+  // xSeatRight.onSeat([]()
+  //                   { xSeatRightState = 1; sendTo(SEAT, xSeatLeftState, xSeatRightState); });
+  // xSeatRight.onUnSeat([]()
+  //                     { xSeatRightState = 0; sendTo(SEAT, xSeatLeftState, xSeatRightState); });
+  // xBeltLeft.onPress([]()
+  //                   { xBeltLeftState = 1; sendTo(BELT, xBeltLeftState, xBeltRightState); });
+  // xBeltLeft.onRelease([]()
+  //                     { xBeltLeftState = 0; sendTo(BELT, xBeltLeftState, xBeltRightState); });
+  // xBeltRight.onPress([]()
+  //                    { xBeltRightState = 1; sendTo(BELT, xBeltLeftState, xBeltRightState); });
+  // xBeltRight.onRelease([]()
+  //                      { xBeltRightState = 0; sendTo(BELT, xBeltLeftState, xBeltRightState); });
+  // xButtonStart.onPress([]()
+  //                      { sendTo(BUTTON, 0, 2); });
+  // xButtonSlow.onPress([]()
+  //                     { sendTo(BUTTON, 0, 1); });
+  // xButtonPlayer.onPress([]()
+  //                       { sendTo(BUTTON, 1, 0); });
+
+  xSeatLeft.onSeat(L_Seat_Set);
+  xSeatLeft.onUnSeat(L_Seat_Levae);
+
+  xSeatRight.onSeat(R_Seat_Set);
+  xSeatRight.onUnSeat(R_Seat_Levae);
+
+  xBeltLeft.onPress(L_Fasten);
+  xBeltLeft.onRelease(L_Release);
+
+  xBeltRight.onPress(R_Fasten);
+  xBeltRight.onRelease(R_Release);
+
+  xButtonStart.onPress(Start_Clicked);
+  xButtonSlow.onPress(Slow_Clicked);
+  xButtonPlayer.onPress(Player_Clicked);
 }
 
 void setup()

@@ -17,11 +17,12 @@ public:
 private:
   int _pin;
   unsigned long _startTime;
+  unsigned long _unsetTime;
   int _distanceThreshold;
   bool _isSeated;
   void (*_onSeatFunction)();
   void (*_onUnSeatFunction)();
-  const unsigned long HOLD_TIME = 1000;
+  const unsigned long HOLD_TIME = 2500;
 };
 
 #endif
